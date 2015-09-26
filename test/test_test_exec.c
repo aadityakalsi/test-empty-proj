@@ -8,12 +8,12 @@
 #ifdef _WIN32
 static char    S_PATH[MAX_PATH];
 static HMODULE S_HMODULE;
-static int     S_HAND_INIT = false;
+static int     S_HAND_INIT = 0;
 
 void set_exe_parent_path(void) {
     if (!S_HAND_INIT) {
         S_HMODULE = GetModuleHandle(NULL);
-        S_HAND_INIT = true;
+        S_HAND_INIT = 1;
     }
     GetModuleFileName(S_HMODULE, S_PATH, MAX_PATH);
     *(strrchr(S_PATH, '\\')) = '\0';
