@@ -269,7 +269,7 @@ endif(NOT WIN32)
 
 # -- For debug with lcov, we skip -Wl,-no-undefined
 if((NOT USE_CODE_COV) AND (NOT WIN32))
-  if(USING_APPLE_CLANG)
+  if(APPLE)
     set(CMAKE_SHARED_LINKER_FLAGS "${CMAKE_SHARED_LINKER_FLAGS} -Wl,-undefined,error")
   else()#GCC like compiler
     set(CMAKE_SHARED_LINKER_FLAGS "${CMAKE_SHARED_LINKER_FLAGS} -Wl,--no-undefined")
