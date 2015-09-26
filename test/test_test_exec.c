@@ -3,7 +3,7 @@
 #define _CRT_SECURE_NO_DEPRECATE
 #endif
 
-#include <test-empty-proj/unittest/unittest.h>
+#include "unittest.h"
 
 #ifdef _WIN32
 static char    S_PATH[MAX_PATH];

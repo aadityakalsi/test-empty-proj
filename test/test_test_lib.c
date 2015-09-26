@@ -1,6 +1,6 @@
 
-#include <test-empty-proj/test_lib/export.h>
-#include <test-empty-proj/unittest/unittest.h>
+#include "unittest.h"
+#include <test_lib/export.h>
 
 TEST_FUNC( test_lib ) {
     TEST_TRUE( test_lib_func() );
