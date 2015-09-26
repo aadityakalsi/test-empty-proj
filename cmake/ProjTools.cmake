@@ -91,9 +91,9 @@ set(PROJ_DIR ${CMAKE_CURRENT_SOURCE_DIR})
 set(PROJ_INCLUDE_DIR ${PROJ_DIR}/include)
 
 # -- Define project globals: INSTALL dirs
-set(PROJ_INSTALL_BIN_DIR     bin)
-set(PROJ_INSTALL_LIB_DIR     lib)
-set(PROJ_INSTALL_INC_DIR     include)
+set(PROJ_INSTALL_BIN_DIR bin)
+set(PROJ_INSTALL_LIB_DIR lib)
+set(PROJ_INSTALL_INC_DIR include)
 if(WIN32)
   set(PROJ_INSTALL_SHARE_DIR .)
 else()
@@ -109,6 +109,9 @@ else()
     set(PROJ_INSTALL_DIR ${PROJ_DIR}/install)
   endif()
 endif()
+
+# Make install dir absolute
+get_filename_component(PROJ_INSTALL_DIR ${PROJ_INSTALL_DIR} ABSOLUTE)
 
 projmsg("Include folder: " ${PROJ_INCLUDE_DIR})
 projmsg("Install folder: " ${PROJ_INSTALL_DIR})
@@ -519,7 +522,7 @@ function(add_test_exe testname filename)
     file(WRITE ${test_dirname}/CMakeLists.txt
       "# Generated CMakeLists.txt for install test ${testname}\n")
     file(APPEND ${test_dirname}/CMakeLists.txt
-      "set_directory_properties(PROPERTIES INCLUDE_DIRECTORIES ${PROJ_INSTALL_DIR}/${PROJ_INSTALL_INC_DIR})\n")
+      "set_directory_properties(PROPERTIES INCLUDE_DIRECTORIES )\n")
     file(APPEND ${test_dirname}/CMakeLists.txt
       "if (USE_CODE_COV)\n")
     file(APPEND ${test_dirname}/CMakeLists.txt
@@ -536,6 +539,8 @@ function(add_test_exe testname filename)
       "add_dependencies(${testname}_install install_for_check_done)\n")
     file(APPEND ${test_dirname}/CMakeLists.txt
       "add_inc_dir(${testname}_install ${PROJ_DIR}/unittest)\n")
+    file(APPEND ${test_dirname}/CMakeLists.txt
+      "add_inc_dir(${testname}_install ${PROJ_INSTALL_DIR}/${PROJ_INSTALL_INC_DIR})\n")
   endif()
 endfunction(add_test_exe)
 
