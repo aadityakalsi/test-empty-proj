@@ -3,7 +3,7 @@
  * A tutorial and test for the unit-test framework
  */
 
-#include <test-empty-proj/unittest/unittest.h>
+#include "unittest.h"
 
 /* ----------------------------------------------- */
 
@@ -33,14 +33,15 @@ TEST_FUNC( fail_test_test_false ) {
 /* ----------------------------------------------- */
 
 TEST_SETUP( test_case ) {
-    static int bVal = false;
+    static int bVal;
+    bVal = 0;
     return (void*) &bVal;
 }
 
 TEST_FUNC( test_case ) {
     int* data = (int*) testdata;
     ASSERT_FALSE( *data );
-    *data = true;
+    *data = 1;
     TEST_TRUE( *data );
 }
 

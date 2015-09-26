@@ -74,15 +74,14 @@
 #ifndef PROJ_UNITTEST_UNITTEST_H
 #define PROJ_UNITTEST_UNITTEST_H
 
-#if !defined(false)
-#define false 0
-#endif
 
-#if !defined(true)
-#define true 1
-#endif
+#include <stdio.h>
+#include <time.h>
+#include <stdlib.h>
 
 #define ERR_STRM stderr
+
+const char* EXE_NAME = NULL;
 
 /* --- Test function types --- */
 
@@ -130,10 +129,6 @@ typedef void (*TestFunc)(void*,int*);
 typedef void (*TestClnupFunc)(void*);
 
 /* ------------------------------ */
-
-#include <stdio.h>
-#include <time.h>
-#include <stdlib.h>
 
 static const double BAD_TIME = -1.0;
 
@@ -336,7 +331,7 @@ int RunTest(const char* testname,
             TestSetupFunc testsetupfn,
             TestFunc testfn,
             TestClnupFunc testcleanupfn) {
-    int retval = true;
+    int retval = 1;
     void* testdata = NULL;
     double timeTaken = -1.0;
 
@@ -380,7 +375,7 @@ int RunTest(const char* testname,
 do { \
     if(!(expr)) { \
         ERROR_PRINT("Condition '%s' failed in file '%s:%d' in function '%s'.\n", #expr, __FILE__, __LINE__, __FUNCTION__); \
-        *(TEST_RET_VAL_PTR_NAME) = false; \
+        *(TEST_RET_VAL_PTR_NAME) = 0; \
     } \
 } while(0)
 
@@ -415,6 +410,12 @@ do { \
  *  - prints to standard error and exits with failure
  */
 #define ASSERT_FALSE(expr) ASSERT_TRUE(!(expr))
+
+/**
+ * FILTER_IF
+ * Skip remaining test if the filter is true.
+ */
+#define FILTER_IF(cond) return
 
 /* ------------------------------ */
 
@@ -504,24 +505,36 @@ extern void SetupTests();
  * and non-zero on failure
  */
 int main(int argc, const char* argv[]) {
-    int allPassed = true;
+    int allPassed = 1;
     int tidx = 0;
-
+    int currPassed = 0;
 #if defined(_WIN32)
     // Initialize color attributes
     SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), FOREGROUND_WHITE);
     SetConsoleTextAttribute(GetStdHandle(STD_ERROR_HANDLE), FOREGROUND_WHITE);
 #endif
 
+    EXE_NAME = argv[0];
+
     SetupTests();
     ASSERT_TRUE(CURR_TEST_ < MAX_TESTS);
     for(; tidx < CURR_TEST_; ++tidx) {
         /* a test could abort with asserts */
-        allPassed &= RunTest(
+         DEBUG_PRINT("Running test\n");
+         currPassed = RunTest(
                         TESTS_[tidx].test_name_,
                         TESTS_[tidx].test_setup_,
                         TESTS_[tidx].test_func_,
                         TESTS_[tidx].test_clnup_);
+         allPassed &= currPassed;
+         if (currPassed) {
+             DEBUG_PRINT("Re-running test to ensure pass on rerun\n");
+             allPassed &= RunTest(
+                            TESTS_[tidx].test_name_,
+                            TESTS_[tidx].test_setup_,
+                            TESTS_[tidx].test_func_,
+                            TESTS_[tidx].test_clnup_);	 
+         }
     }
     return allPassed ? 0 : 1;
 }
