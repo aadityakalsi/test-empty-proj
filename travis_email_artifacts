@@ -4,11 +4,9 @@ projname=$(basename $(cd "$(dirname "$0")"; pwd))
 artname="${projname}_${BTYPE}_${TRAVIS_OS_NAME}_${CC}"
 
 if [ ${TRAVIS_OS_NAME} = "linux" ]; then
-    sudo apt-get install uuencode mail
-    sudo apt-get install mutt
+    (sudo apt-get install mutt) &> /dev/null
 fi
 
-(tar -czf - install/*) > "$artname.tar.gz"
-echo "$artname" | mutt -a "$artname.tar.gz" akalsi.work@gmail.com
-
-#tar -czf - install/* | uuencode "$artname.tar.gz" | mail -s "$artname" akalsi.work@gmail.com <<< "$artname"
+if [ ${TRAVIS_OS_NAME} = "osx" ]; then
+    tar -czf - install/* | uuencode "$artname.tar.gz" | mail -s "$artname" akalsi.work@gmail.com <<< "$artname"
+fi
