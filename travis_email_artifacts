@@ -5,6 +5,10 @@ artname="${projname}_${BTYPE}_${TRAVIS_OS_NAME}_${CC}"
 
 if [ ${TRAVIS_OS_NAME} = "linux" ]; then
     sudo apt-get install uuencode mail
+    sudo apt-get install mutt
 fi
 
-tar -czf - install/* | uuencode "$artname.tar.gz" | mail -s "$artname" akalsi.work@gmail.com <<< "$artname"
+(tar -czf - install/*) > "$artname.tar.gz"
+echo "$artname" | mutt -a "$artname.tar.gz" akalsi.work@gmail.com
+
+#tar -czf - install/* | uuencode "$artname.tar.gz" | mail -s "$artname" akalsi.work@gmail.com <<< "$artname"
