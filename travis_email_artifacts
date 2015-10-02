@@ -1,10 +1,10 @@
 #!/bin/bash
 
-
 projname=$(basename $(cd "$(dirname "$0")"; pwd))
 artname="${projname}_${BTYPE}_${TRAVIS_OS_NAME}_${CC}"
 
-tar -czf - install/* | uuencode "$artname.tar.gz" | mail -r "travisbuild@travis-ci.org" -s "$artname" akalsi.work@gmail.com <<< "$artname"
+if [ ${TRAVIS_OS_NAME} = "linux" ]; then
+    sudo apt-get install uuencode mail
+fi
 
-#tar -czf "$artname.tar.gz" install/*
-#mail -a "$artname.tar.gz" -s "$artname" akalsi.work@gmail.com <<< "$artname"
+tar -czf - install/* | uuencode "$artname.tar.gz" | mail -s "$artname" akalsi.work@gmail.com <<< "$artname"
