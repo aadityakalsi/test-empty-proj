@@ -5,6 +5,8 @@ artname="${projname}_${BTYPE}_${TRAVIS_OS_NAME}_${CC}"
 
 if [ ${TRAVIS_OS_NAME} = "linux" ]; then
     (sudo apt-get install mutt) &> /dev/null
+    tar -czf "$artname.tar.gz" install/*
+    echo "$artname" | mutt -s "$artname" -a "$artname.tar.gz" -- akalsi.work@gmail.com
 fi
 
 if [ ${TRAVIS_OS_NAME} = "osx" ]; then
