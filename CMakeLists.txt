@@ -53,14 +53,18 @@ set_tgt_ver(test_exec 1)
 install_tgt(test_exec)
 
 # TEST_LIB
-# -- Exported headers
-set(test_lib_hdrs include/test_lib/export.h)
+set(test_lib_xprt_hdr include/test_lib/api.h)
 
-# -- Install headers
-install_hdr(${test_lib_hdrs})
-
-add_lib(test_lib SHARED src/test_lib/test_lib.c include/test_lib/export.h)
-add_lib_build_def(test_lib TEST_LIB_BUILD)
+add_lib(test_lib SHARED src/test_lib/test_lib.c)
+add_lib_build_def(test_lib include/test_lib/export.h TEST_LIB)
 link_libs(test_lib )
 set_tgt_ver(test_lib 0.1.1 0.1)
+
+add_lib(test_lib_s STATIC src/test_lib/test_lib.c)
+add_lib_build_def(test_lib_s include/test_lib/export.h TEST_LIB)
+link_libs(test_lib_s )
+set_tgt_ver(test_lib_s 0.1.1 0.1)
+
+install_hdr(${test_lib_xprt_hdr})
 install_tgt(test_lib)
+install_tgt(test_lib_s)
