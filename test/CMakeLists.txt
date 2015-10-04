@@ -20,7 +20,14 @@ test_link_libs  (test_test_exec )
 create_test     (test_test_exec)
 
 # TEST: proj test_lib sub module; Static library
+
 add_definitions(-DTEST_LIB_LINK_STATIC)
-add_test_exe    (test_test_lib_s test_test_lib.c)
+
+macro(copyrenamefile orig new)
+  configure_file(${CMAKE_CURRENT_SOURCE_DIR}/${orig} ${CMAKE_CURRENT_SOURCE_DIR}/${new} COPYONLY)
+endmacro()
+
+copyrenamefile  (test_test_lib.c test_test_lib_s.c)
+add_test_exe    (test_test_lib_s test_test_lib_s.c)
 test_link_libs  (test_test_lib_s test_lib_s)
 create_test     (test_test_lib_s)
